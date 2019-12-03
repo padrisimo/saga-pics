@@ -1,4 +1,4 @@
-import { IMAGES } from '../constants';
+import { IMAGES, STATS } from '../constants';
 
 const loadImages = () => ({
   type: IMAGES.LOAD
