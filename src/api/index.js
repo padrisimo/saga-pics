@@ -12,4 +12,14 @@ const fetchImages = async page => {
   return data;
 };
 
-export { fetchImages };
+const fetchImageStats = async id => {
+  throw new Error('catacroket!');
+  const response = await fetch(`${URL}/${id}/statistics/?client_id=${KEY}`);
+  const data = await response.json();
+  if (response.status >= 400) {
+    throw new Error(data.errors);
+  }
+  return data;
+};
+
+export { fetchImages, fetchImageStats };

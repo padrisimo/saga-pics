@@ -1,9 +1,23 @@
-import { take, fork } from 'redux-saga/effects';
+import { take, fork, call, put } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
 
 import { IMAGES } from '../constants';
+import { fetchImageStats } from '../api';
+import { loadImageStats, setImageStats, setImageStatsError } from '../actions';
 
 function* handleStatsRequest(id) {
-  console.log('stats of ', id);
+  for (let i = 0; i < 3; i++) {
+    try {
+      yield put(loadImageStats(id));
+      const res = yield call(fetchImageStats, id);
+      yield put(setImageStats(id, res.download.total));
+    } catch (err) {
+      if (i < 2) {
+        yield delay(500);
+      }
+    }
+  }
+  yield put(setImageStatsError(id));
 }
 
 export default function* watchStatsRequest() {
