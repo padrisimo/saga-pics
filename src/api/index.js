@@ -13,8 +13,7 @@ const fetchImages = async page => {
 };
 
 const fetchImageStats = async id => {
-  throw new Error('catacroket!');
-  const response = await fetch(`${URL}/${id}/statistics/?client_id=${KEY}`);
+  const response = await fetch(`${URL}${id}/statistics?client_id=${KEY}`);
   const data = await response.json();
   if (response.status >= 400) {
     throw new Error(data.errors);

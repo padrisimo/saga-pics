@@ -10,11 +10,13 @@ function* handleStatsRequest(id) {
     try {
       yield put(loadImageStats(id));
       const res = yield call(fetchImageStats, id);
-      yield put(setImageStats(id, res.download.total));
+      yield put(setImageStats(id, res.downloads.total));
+      return true;
     } catch (err) {
       if (i < 2) {
         yield delay(500);
       }
+      console.log(err);
     }
   }
   yield put(setImageStatsError(id));
