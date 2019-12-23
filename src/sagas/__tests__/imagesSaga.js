@@ -2,7 +2,7 @@ import { runSaga } from 'redux-saga';
 
 import * as api from '../../api';
 import { getPage, handleImagesLoad } from '../imagesSaga';
-import { setImages } from '../../actions';
+import { setImages, setError } from '../../actions';
 
 test('selector gives back the page', () => {
   const nextPage = 1;
@@ -26,4 +26,21 @@ test('should load images and handle them', async () => {
 
   expect(api.fetchImages.mock.calls.length).toBe(1);
   expect(dispatchedActions).toContainEqual(setImages(mockedImages));
+});
+
+test('should handle errors in case of fail', async () => {
+  const dispatchedActions = [];
+
+  const error = 'some error is thrown';
+  api.fetchImages = jest.fn(() => Promise.reject(error));
+
+  const fakeStore = {
+    getState: () => ({ nextPage: 1 }),
+    dispatch: action => dispatchedActions.push(action)
+  };
+
+  await runSaga(fakeStore, handleImagesLoad).done;
+
+  expect(api.fetchImages.mock.calls.length).toBe(1);
+  expect(dispatchedActions).toContainEqual(setError(error));
 });
